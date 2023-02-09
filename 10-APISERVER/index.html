@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  <title>Document</title>
+</head>
+<body>
+    <button id="get">GET</button>
+    <button id="post">POST</button>
+    <button id="delete">DELETE</button>
+    <button id="btnJSONP">BTNJSONP</button>
+    <button id="xmlreq">XMLREQ</button>
+    <button id="abort">ABORT</button>
+    <div id="result"></div>      
+  <script>   
+    //req object
+      const xhr = new XMLHttpRequest();
+    // jquery ajax 
+    $('#get').on('click',function(){
+      $.ajax({
+        type:'GET',
+        url:'http://127.0.0.1:8080/api/?id=3',
+        success:function(res){
+          console.log(res);
+        }
+      })
+    });
+    $('#post').on('click',function(){
+      $.ajax({
+        type:'POST',
+        url:'http://127.0.0.1:8080/api',
+        data:{
+          name:'zjj',
+          id:123,
+        },
+        success:function(res){
+          console.log(res);
+        }
+      })
+    });
+    $('#delete').on('click',()=>{
+      $.ajax({
+        type:"DELETE",
+        url:'http://127.0.0.1:8080/api',
+        success:function(res){
+          console.log(res);
+        }
+      })
+    });
+    $('#btnJSONP').on('click',()=>{
+      $.ajax({
+        type:'GET',
+        url:'http://127.0.0.1:8080/api/jsonp/',
+        dataType:'jsonp',
+        success:function(res){
+          console.log(res);
+        },
+        error:function(){
+          console.log("ERROR!!");
+        },
+        timeout:2000,
+        //请求头
+        headers:{
+          'name':'zjj',
+        }
+      })
+    })
+    //origin ajax
+    const xmlbtn = document.getElementById('xmlreq');
+    xmlbtn.onclick = function(){
+      //req config
+      xhr.open('GET','http://127.0.0.1:8080/api/?id=666');
+      // req headers
+      xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+      //设置自动转换为json格式
+      xhr.responseType = 'json';
+      //set time out
+      xhr.timeout = 2000;
+      //set time out function
+      xhr.ontimeout = function(){
+        console.log('time out');
+      };
+      //internet err function
+      xhr.onerror =function(){
+        console.log("Internet ERROR");
+      }
+      //send
+      xhr.send();
+      //watch state change event
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4){
+          if(xhr.status >= 200 && xhr.status < 300){
+            //1.响应行
+            console.log(xhr.status);//status code
+            console.log(xhr.statusText);//status string
+            console.log(xhr.getAllResponseHeaders());//all headers
+            console.log(xhr.response);//body  sth in res.send('...')
+            document.getElementById('result').innerHTML = JSON.stringify(xhr.response
+            );
+          }else{
+
+          }
+        }
+      }
+    }
+    document.getElementById('abort').onclick = function(){
+      xhr.abort();
+    }
+</script>
+</body>
+</html>

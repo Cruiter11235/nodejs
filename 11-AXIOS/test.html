@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <button id="GET">GET</button>
+  <button id="POST">POST</button>
+  <button id="AJAX">AJAX</button>
+  <button id="fetch-get">FETCH-GET</button>
+  <button id="fetch-post">FETCH-POST</button>
+  <div id="result" style="background-color: pink;"></div>
+  <script type="module">
+    document.getElementById('GET').onclick = ()=>{
+      axios({
+        method:'get',
+        baseURL:'http://127.0.0.1:8080',
+        url:'/axios-server/?name=zhuangjinjun',
+        params:{
+          name:'zjj',
+          age:18,
+        }
+      }).then(function(res){
+        console.log(res);
+        document.getElementById('result').innerHTML = JSON.stringify(res.data);
+      })
+    };
+    document.getElementById('POST').onclick = ()=>{
+      axios({
+        method:'post',
+        baseURL:'http://127.0.0.1:8080',
+        url:'/axios-server/999',
+        //params同步到后端req的query中，data由中间件同步到req.body中
+        params:{
+          name:'zzz',
+          age:20,
+        },
+        data:{
+          id:'666',
+        },
+        headers:{},
+        timeout:2000,
+      }).then((res)=>{
+        document.getElementById('result').innerHTML = JSON.stringify(res.data);
+      }).catch((err)=>{
+        console.log(err.message);
+      });
+    };
+    document.getElementById('fetch-get').onclick = ()=>{
+      fetch('http://127.0.0.1:8080/fetch-server',{
+        method:'POST',
+        headers:{
+          name:'atguigu',
+        },
+        body:{
+          username:'zjj',
+        },
+      }).then((res)=>{
+        return res.json();
+      }).then((res)=>{
+        console.log(res);
+      })
+    }
+</script>
+</body>
+</html>
